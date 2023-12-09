@@ -71,7 +71,7 @@ class Task extends Component {
         )}
         <li
           key={id}
-          className={`${completed ? 'completed' : ''}`}
+          className={`${completed ? 'completed' : 'not-completed'}`}
           onClick={(event) => onClickDone(event, id)}>
           <div className="view">
             <input
