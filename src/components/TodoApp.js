@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { NewTaskForm } from './NewTaskForm';
 import { TaskList } from './TodoContainer/TaskList';
 import { Footer } from './FooterContainer/Footer';
@@ -6,12 +7,7 @@ import { Footer } from './FooterContainer/Footer';
 class TodoApp extends Component {
   unicId = 50;
   state = {
-    todoData: [
-      { title: 'learn react', completed: false, id: 1 },
-      { title: 'drink cofee', completed: false, id: 2 },
-      { title: 'read book', completed: false, id: 3 },
-      { title: 'drink juce', completed: false, id: 4 },
-    ],
+    todoData: [],
     filter: [
       { status: 'All', completed: true, id: 1 },
       { status: 'Completed', completed: false, id: 2 },
@@ -51,8 +47,12 @@ class TodoApp extends Component {
   };
 
   createNewTask = (text) => {
-    const newTask = { title: text, completed: false, id: this.unicId };
-    this.unicId++;
+    const newTask = {
+      title: text,
+      completed: false,
+      id: this.unicId++,
+      created: Date.now(),
+    };
     this.setState(({ todoData }) => {
       return {
         todoData: [newTask, ...todoData],
@@ -89,6 +89,24 @@ class TodoApp extends Component {
     });
   };
 
+  changeTheValue = (newValue, id) => {
+    this.setState(({ todoData }) => {
+      const newArray = todoData.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            title: newValue,
+          };
+        }
+        return item;
+      });
+
+      return {
+        todoData: [...newArray],
+      };
+    });
+  };
+
   render() {
     const { todoData, filter } = this.state;
     const todoCount = todoData.filter((item) => !item.completed).length;
@@ -104,13 +122,15 @@ class TodoApp extends Component {
             todos={todoData}
             onDeleteTask={this.deleteTask}
             onClickDone={this.onClickDone}
+            changeTheValue={this.changeTheValue}
           />
           <Footer
             clearCompleted={this.clearCompleted}
             todoCount={todoCount}
             filter={filter}
-            onSelectedFilter={this.onSelectedFilter}
-          />
+            onSelectedFilter={this.onSelectedFilter}>
+            <span>click</span>
+          </Footer>
         </section>
       </section>
     );

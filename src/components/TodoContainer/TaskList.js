@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import { Task } from './Task';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+// filter, todos, onDeleteTask, onClickDone
 class TaskList extends Component {
+  static propTypes = {
+    filter: PropTypes.arrayOf(PropTypes.object),
+    todos: PropTypes.arrayOf(PropTypes.object),
+    onDeleteTask: PropTypes.func,
+    onClickDone: PropTypes.func,
+  };
+
   render() {
-    const date = formatDistanceToNow(new Date(), new Date());
-    const { filter, todos, onDeleteTask, onClickDone } = this.props;
+    const { filter, todos, onDeleteTask, onClickDone, changeTheValue } = this.props;
     const { status } = filter.find((item) => item.completed === true);
 
     const tasks = todos
@@ -15,7 +23,13 @@ class TaskList extends Component {
       })
       .map((item) => {
         return (
-          <Task key={item.id} {...item} onDeleteTask={onDeleteTask} onClickDone={onClickDone} />
+          <Task
+            key={item.id}
+            {...item}
+            onDeleteTask={onDeleteTask}
+            onClickDone={onClickDone}
+            changeTheValue={changeTheValue}
+          />
         );
       });
 

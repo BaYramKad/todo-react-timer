@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class TasksFilter extends Component {
+  static propTypes = {
+    filter: PropTypes.array,
+    onSelectedFilter: PropTypes.func,
+  };
   render() {
     const { filter, onSelectedFilter } = this.props;
 

@@ -179,6 +179,13 @@ body {
   display: none;
 }
 
+.todo-list li input.edit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 85px 15px 60px;
+}
+
 .todo-list li .toggle {
   text-align: center;
   width: 40px;

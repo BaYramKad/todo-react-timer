@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class NewTaskForm extends Component {
   state = {
@@ -7,7 +8,7 @@ class NewTaskForm extends Component {
 
   onTaskChange = (event) => {
     this.setState({
-      taskValue: event.target.value,
+      taskValue: event.target.value.trimLeft(),
     });
   };
 
@@ -15,10 +16,14 @@ class NewTaskForm extends Component {
     event.preventDefault();
     const { createNewTask } = this.props;
     const { taskValue } = this.state;
-    createNewTask(taskValue);
-    this.setState({
-      taskValue: '',
-    });
+    if (taskValue) {
+      createNewTask(taskValue);
+      this.setState({
+        taskValue: '',
+      });
+    } else {
+      alert('The task cannot be empty');
+    }
   };
 
   render() {
@@ -35,5 +40,9 @@ class NewTaskForm extends Component {
     );
   }
 }
+
+NewTaskForm.propTypes = {
+  createNewTask: PropTypes.func,
+};
 
 export { NewTaskForm };

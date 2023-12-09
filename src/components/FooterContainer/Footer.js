@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { TasksFilter } from './TasksFilter';
+import PropTypes from 'prop-types';
 
 class Footer extends Component {
+  static defaultProps = {
+    todoCount: 0,
+  };
+
   render() {
     const { todoCount, filter, onSelectedFilter, clearCompleted } = this.props;
     return (
@@ -15,5 +20,12 @@ class Footer extends Component {
     );
   }
 }
+
+Footer.propTypes = {
+  todoCount: PropTypes.number,
+  filter: PropTypes.array,
+  onSelectedFilter: PropTypes.func,
+  clearCompleted: PropTypes.func,
+};
 
 export { Footer };
