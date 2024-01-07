@@ -1,11 +1,11 @@
 export function getCurrentTimer(number) {
-  const date = new Date(number);
-  date.setHours(0);
-  date.setSeconds(number);
+  const hours = Math.floor(number / 60 / 60) % 24;
+  const minutes = Math.floor((number % 1000) / 60);
+  const seconds = number % 60;
 
-  const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-  const minnutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-  const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+  const hoursCurrect = hours < 10 ? '0' + hours : hours;
+  const minutesCurrect = minutes < 10 ? '0' + minutes : minutes;
+  const secondsCurrect = seconds < 10 ? '0' + seconds : seconds;
 
-  return `${hours}:${minnutes}:${seconds}`;
+  return `${hoursCurrect}:${minutesCurrect}:${secondsCurrect}`;
 }
