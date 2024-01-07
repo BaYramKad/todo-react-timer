@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+
 class Task extends Component {
   static defaultProps = {
     title: 'New Task',
@@ -15,6 +16,7 @@ class Task extends Component {
     created: PropTypes.number,
     onDeleteTask: PropTypes.func,
     onClickDone: PropTypes.func,
+    changeTheValue: PropTypes.func,
   };
 
   state = {
@@ -52,11 +54,23 @@ class Task extends Component {
       changedValue: this.props.title,
     });
   };
+
   render() {
-    const { title, completed, id, created, onDeleteTask, onClickDone } = this.props;
+    const {
+      title,
+      completed,
+      id,
+      created,
+      onDeleteTask,
+      onClickDone,
+      currentTime,
+      isStart,
+      onUpdateTimer,
+      offUpdateTimer,
+      refId,
+    } = this.props;
     const { changedValue, viewInput } = this.state;
     const distance = formatDistanceToNow(created, { addSuffix: true });
-
     return (
       <>
         {viewInput && (
@@ -72,7 +86,8 @@ class Task extends Component {
         <li
           key={id}
           className={`${completed ? 'completed' : 'not-completed'}`}
-          onClick={(event) => onClickDone(event, id)}>
+          onClick={(event) => onClickDone(event, id)}
+        >
           <div className="view">
             <input
               className="toggle"
@@ -80,8 +95,21 @@ class Task extends Component {
               checked={completed && true}
               onChange={() => {}}
             />
-            <label>
-              <span className="description">{title}</span>
+            <label htmlFor="title">
+              <span className="title" id="title">
+                {title}
+              </span>
+              <span className="description">
+                {isStart ? (
+                  <button className="icon icon-play" onClick={() => onUpdateTimer(id)}></button>
+                ) : (
+                  <button
+                    className="icon icon-pause"
+                    onClick={() => offUpdateTimer(id, refId)}
+                  ></button>
+                )}
+                {currentTime}
+              </span>
               <span className="created">{distance}</span>
             </label>
             <button className="icon icon-edit" onClick={this.onEditValue}></button>

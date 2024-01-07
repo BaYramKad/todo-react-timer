@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 
 import { NewTaskForm } from './NewTaskForm';
 import { TaskList } from './TodoContainer/TaskList';
 import { Footer } from './FooterContainer/Footer';
+import { getCurrentTimer } from '../access/getCurrentTimer';
 
 class TodoApp extends Component {
   unicId = 50;
+  intervalTimer = null;
   state = {
     todoData: [],
     filter: [
@@ -13,11 +15,78 @@ class TodoApp extends Component {
       { status: 'Completed', completed: false, id: 2 },
       { status: 'Active', completed: false, id: 3 },
     ],
+    refsIds: {},
+  };
+
+  onAddRefId(id) {
+    this.setState(({ refsIds, todoData }) => {
+      const newData = todoData.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            refId: this.ref.current,
+          };
+        }
+        return todo;
+      });
+      return {
+        refsIds: {
+          ...refsIds,
+          [this.ref.current]: this.ref.current,
+        },
+        todoData: [...newData],
+      };
+    });
+  }
+
+  onUpdateTimer = (id) => {
+    this.ref = createRef();
+    this.ref.current = setInterval(() => {
+      this.setState((prevState) => {
+        const newArr = prevState.todoData.map((item) => {
+          const resObj = {
+            ...item,
+            timer: item.timer + 1,
+            currentTime: getCurrentTimer(item.timer + 1),
+          };
+          const changed = item.id === id ? resObj : item;
+          return changed;
+        });
+        return {
+          ...prevState,
+          todoData: [...newArr],
+        };
+      });
+    }, 1000);
+    this.changeImagePlay(id);
+    this.onAddRefId(id);
+  };
+
+  offUpdateTimer = (id, refId) => {
+    clearInterval(this.state.refsIds[refId]);
+    this.changeImagePlay(id);
+  };
+  changeImagePlay = (id) => {
+    this.setState((prevState) => {
+      const newArr = prevState.todoData.map((item) => {
+        const resObj = {
+          ...item,
+          isStart: !item.isStart,
+        };
+        const changed = item.id === id ? resObj : item;
+        return changed;
+      });
+      return {
+        ...prevState,
+        todoData: [...newArr],
+      };
+    });
   };
 
   onClickDone = (event, id) => {
     const t = event.target;
-    if (t.matches('label') || t.matches('span.description')) {
+    const match = t.matches('label') || t.matches('span.title') || t.matches('.toggle');
+    if (match) {
       this.setState((prevState) => {
         const newArr = prevState.todoData.map((item) => {
           if (item.id === id) {
@@ -37,9 +106,15 @@ class TodoApp extends Component {
     }
   };
 
+  claearTimer = (id) => {
+    const obj = this.state.todoData.find((item) => item.id === id);
+    clearTimeout(obj.refId);
+  };
+
   deleteTask = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((item) => item.id === id);
+      this.claearTimer(id);
       return {
         todoData: [...todoData.slice(0, idx), ...todoData.slice(idx + 1)],
       };
@@ -52,6 +127,9 @@ class TodoApp extends Component {
       completed: false,
       id: this.unicId++,
       created: Date.now(),
+      timer: 0,
+      currentTime: '00:00:00',
+      isStart: true,
     };
     this.setState(({ todoData }) => {
       return {
@@ -83,6 +161,11 @@ class TodoApp extends Component {
   clearCompleted = () => {
     this.setState(({ todoData }) => {
       const clearningData = todoData.filter((item) => !item.completed);
+      todoData.forEach((item) => {
+        if ('refId' in item) {
+          clearTimeout(item.refId);
+        }
+      });
       return {
         todoData: [...clearningData],
       };
@@ -106,7 +189,6 @@ class TodoApp extends Component {
       };
     });
   };
-
   render() {
     const { todoData, filter } = this.state;
     const todoCount = todoData.filter((item) => !item.completed).length;
@@ -123,12 +205,15 @@ class TodoApp extends Component {
             onDeleteTask={this.deleteTask}
             onClickDone={this.onClickDone}
             changeTheValue={this.changeTheValue}
+            onUpdateTimer={this.onUpdateTimer}
+            offUpdateTimer={this.offUpdateTimer}
           />
           <Footer
             clearCompleted={this.clearCompleted}
             todoCount={todoCount}
             filter={filter}
-            onSelectedFilter={this.onSelectedFilter}>
+            onSelectedFilter={this.onSelectedFilter}
+          >
             <span>click</span>
           </Footer>
         </section>

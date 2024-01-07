@@ -2,19 +2,29 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Task } from './Task';
-// filter, todos, onDeleteTask, onClickDone
+
 class TaskList extends Component {
   static propTypes = {
     filter: PropTypes.arrayOf(PropTypes.object),
     todos: PropTypes.arrayOf(PropTypes.object),
     onDeleteTask: PropTypes.func,
     onClickDone: PropTypes.func,
+    changeTheValue: PropTypes.func,
+    offUpdateTimer: PropTypes.func,
+    onUpdateTimer: PropTypes.func,
   };
 
   render() {
-    const { filter, todos, onDeleteTask, onClickDone, changeTheValue } = this.props;
+    const {
+      filter,
+      todos,
+      onDeleteTask,
+      onClickDone,
+      changeTheValue,
+      onUpdateTimer,
+      offUpdateTimer,
+    } = this.props;
     const { status } = filter.find((item) => item.completed === true);
-
     const tasks = todos
       .filter((item) => {
         if (status === 'Active') return !item.completed;
@@ -29,6 +39,8 @@ class TaskList extends Component {
             onDeleteTask={onDeleteTask}
             onClickDone={onClickDone}
             changeTheValue={changeTheValue}
+            onUpdateTimer={onUpdateTimer}
+            offUpdateTimer={offUpdateTimer}
           />
         );
       });
