@@ -17,7 +17,15 @@ class TodoApp extends Component {
     ],
     refsIds: {},
   };
-
+  componentDidMount() {
+    const localItem = JSON.parse(localStorage.getItem(`timer`)) || [];
+    this.setState((prevData) => {
+      return {
+        ...prevData,
+        todoData: localItem,
+      };
+    });
+  }
   onAddRefId(id) {
     this.setState(({ refsIds, todoData }) => {
       const newData = todoData.map((todo) => {
@@ -112,6 +120,10 @@ class TodoApp extends Component {
   };
 
   deleteTask = (id) => {
+    const localItem = JSON.parse(localStorage.getItem(`timer`));
+    const filrerStorage = localItem.filter((item) => item.id !== id);
+    localStorage.setItem(`timer`, JSON.stringify(filrerStorage));
+
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((item) => item.id === id);
       this.claearTimer(id);
@@ -122,15 +134,19 @@ class TodoApp extends Component {
   };
 
   createNewTask = (text) => {
+    const unicId = this.unicId++;
     const newTask = {
       title: text,
       completed: false,
-      id: this.unicId++,
+      id: unicId,
       created: Date.now(),
       timer: 0,
       currentTime: '00:00:00',
       isStart: true,
     };
+
+    const taskStorage = JSON.parse(localStorage.getItem(`timer`)) || [];
+    localStorage.setItem(`timer`, JSON.stringify([...taskStorage, newTask]));
     this.setState(({ todoData }) => {
       return {
         todoData: [newTask, ...todoData],
