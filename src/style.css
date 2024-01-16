@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;500;800&display=swap');
+
 html,
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Dosis', sans-serif;
 }
 
 button {
@@ -25,20 +28,14 @@ button::-moz-focus-inner {
 }
 
 body {
-  font:
-    14px 'Helvetica Neue',
-    Helvetica,
-    Arial,
-    sans-serif;
   line-height: 1.4em;
   background: #f5f5f5;
   color: #111111;
   min-width: 230px;
-  max-width: 550px;
+  max-width: 800px;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: 300;
 }
 
 :focus {
@@ -76,12 +73,12 @@ body {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.todoapp h1 {
+.todoapp .todo-title {
   position: absolute;
   top: -140px;
   width: 100%;
   font-size: 80px;
-  font-weight: 200;
+  font-weight: 800;
   text-align: center;
   color: rgba(175, 47, 47, 0.15);
   -webkit-text-rendering: optimizeLegibility;
@@ -172,6 +169,8 @@ body {
   margin: 0;
   padding: 0;
   list-style: none;
+  overflow: auto;
+  height: 300px;
 }
 
 .todo-list li {
@@ -243,18 +242,21 @@ body {
 .todo-list li .view {
   position: relative;
 }
-
 .todo-list li label .description {
+  flex-grow: 1;
   font-size: 13px;
   color: gray;
 }
-
+.todo-list > span.empty-todo {
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
 .todo-list li label .title {
-  word-break: break-all;
-  display: block;
-  line-height: 1.2;
-  transition: color 0.4s;
-  font-weight: 400;
+  flex-grow: 6;
+  font-weight: 500;
   color: #4d4d4d;
 }
 
@@ -412,6 +414,7 @@ html .clear-completed:active {
 }
 
 label .created {
+  flex-grow: 0.3;
   font-size: 14px;
 }
 

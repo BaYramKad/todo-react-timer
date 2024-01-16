@@ -1,29 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-class TasksFilter extends Component {
-  static propTypes = {
-    filter: PropTypes.array,
-    onSelectedFilter: PropTypes.func,
-  };
-  render() {
-    const { filter, onSelectedFilter } = this.props;
+export const TasksFilter = (props) => {
+  const { filter, onSelectedFilter } = props;
+  return (
+    <ul className="filters">
+      {filter.map(({ status, completed, id }) => {
+        return (
+          <li key={id}>
+            <button
+              disabled={completed && 'disabled'}
+              onClick={() => onSelectedFilter(id)}
+              className={completed ? 'selected' : ''}
+            >
+              {status}
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
 
-    const filterItems = filter.map((item) => {
-      const { status, completed, id } = item;
-      return (
-        <li key={id}>
-          <button
-            disabled={completed && 'disabled'}
-            onClick={() => onSelectedFilter(id)}
-            className={completed ? 'selected' : ''}>
-            {status}
-          </button>
-        </li>
-      );
-    });
-    return <ul className="filters">{filterItems}</ul>;
-  }
-}
-
-export { TasksFilter };
+TasksFilter.propTypes = {
+  filter: PropTypes.array,
+  onSelectedFilter: PropTypes.func,
+};

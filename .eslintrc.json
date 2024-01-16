@@ -61,6 +61,7 @@
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "require-jsdoc": 0,
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "import/no-unresolved": "off"
   }
 }

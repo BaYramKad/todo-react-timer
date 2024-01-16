@@ -1,48 +1,37 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-class NewTaskForm extends Component {
-  state = {
-    taskValue: '',
+export const NewTaskForm = ({ createNewTask }) => {
+  const [value, setValue] = useState('');
+
+  const onTaskChange = (event) => {
+    const targetValue = event.target.value.trimLeft();
+    setValue(targetValue);
   };
 
-  onTaskChange = (event) => {
-    this.setState({
-      taskValue: event.target.value.trimLeft(),
-    });
-  };
-
-  onSubmitTask = (event) => {
+  const onSubmitTask = (event) => {
     event.preventDefault();
-    const { createNewTask } = this.props;
-    const { taskValue } = this.state;
-    if (taskValue) {
-      createNewTask(taskValue);
-      this.setState({
-        taskValue: '',
-      });
-    } else {
+    if (!value) {
       alert('The task cannot be empty');
+    } else {
+      createNewTask(value);
+      setValue('');
     }
   };
 
-  render() {
-    return (
-      <form onSubmit={this.onSubmitTask}>
-        <input
-          className="new-todo"
-          placeholder="What needs to be done?"
-          autoFocus
-          onChange={this.onTaskChange}
-          value={this.state.taskValue}
-        />
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={onSubmitTask}>
+      <input
+        className="new-todo"
+        placeholder="What needs to be done?"
+        autoFocus
+        onChange={onTaskChange}
+        value={value}
+      />
+    </form>
+  );
+};
 
 NewTaskForm.propTypes = {
   createNewTask: PropTypes.func,
 };
-
-export { NewTaskForm };
